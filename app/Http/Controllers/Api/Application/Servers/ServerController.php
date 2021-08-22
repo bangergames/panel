@@ -3,8 +3,10 @@
 namespace Pterodactyl\Http\Controllers\Api\Application\Servers;
 
 use Illuminate\Http\Response;
+use Pterodactyl\Models\MountServer;
 use Pterodactyl\Models\Server;
 use Illuminate\Http\JsonResponse;
+use Pterodactyl\Repositories\Eloquent\MountRepository;
 use Spatie\QueryBuilder\QueryBuilder;
 use Pterodactyl\Services\Servers\ServerCreationService;
 use Pterodactyl\Services\Servers\ServerDeletionService;
@@ -78,6 +80,18 @@ class ServerController extends ApplicationApiController
     {
         $server = $this->creationService->handle($request->validated(), $request->getDeploymentObject());
 
+        if ($request->key('mountAll'))
+        {
+            $mountList = MountRepository::getMountListForServer($server);
+            foreach ($mountList as $mount)
+            {
+                $mountServer = (new MountServer())->forceFill([
+                    'mount_id' => $mount->id,
+                    'server_id' => $server->id,
+                ]);
+                $mountServer->saveOrFail();
+            }
+        }
         return $this->fractal->item($server)
             ->transformWith($this->getTransformer(ServerTransformer::class))
             ->respond(201);

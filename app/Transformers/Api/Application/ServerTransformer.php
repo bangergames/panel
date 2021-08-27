@@ -58,6 +58,7 @@ class ServerTransformer extends BaseTransformer
             'uuid' => $server->uuid,
             'identifier' => $server->uuidShort,
             'name' => $server->name,
+            'mounts' => $server->mounts,
             'description' => $server->description,
             'status' => $server->status,
             // This field is deprecated, please use "status".

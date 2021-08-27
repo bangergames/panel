@@ -80,7 +80,7 @@ class ServerController extends ApplicationApiController
     {
         $server = $this->creationService->handle($request->validated(), $request->getDeploymentObject());
 
-        if ($request->key('mountAll'))
+        if ($request->get('mount_all', false))
         {
             $mountList = MountRepository::getMountListForServer($server);
             foreach ($mountList as $mount)

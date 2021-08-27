@@ -69,13 +69,14 @@ class ServerController extends ApplicationApiController
     /**
      * Create a new server on the system.
      *
-     * @throws \Throwable
-     * @throws \Illuminate\Validation\ValidationException
+     * @param StoreServerRequest $request
+     * @param MountRepository $mountRepository
+     * @return JsonResponse
      * @throws \Pterodactyl\Exceptions\DisplayException
-     * @throws \Pterodactyl\Exceptions\Model\DataValidationException
      * @throws \Pterodactyl\Exceptions\Repository\RecordNotFoundException
      * @throws \Pterodactyl\Exceptions\Service\Deployment\NoViableAllocationException
      * @throws \Pterodactyl\Exceptions\Service\Deployment\NoViableNodeException
+     * @throws \Throwable
      */
     public function store(StoreServerRequest $request, MountRepository $mountRepository): JsonResponse
     {

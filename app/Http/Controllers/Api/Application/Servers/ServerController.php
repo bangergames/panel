@@ -77,18 +77,17 @@ class ServerController extends ApplicationApiController
      * @throws \Pterodactyl\Exceptions\Service\Deployment\NoViableAllocationException
      * @throws \Pterodactyl\Exceptions\Service\Deployment\NoViableNodeException
      */
-    public function store(StoreServerRequest $request): JsonResponse
+    public function store(StoreServerRequest $request, MountRepository $mountRepository): JsonResponse
     {
         $server = $this->creationService->handle($request->validated(), $request->getDeploymentObject());
         if ($request->get('mount_all', false)) {
-            $mounts = Mount::where('user_mountable', true)->get();
-            foreach ($mounts as $mount)
+            $mountList = $mountRepository->getMountListForServer($server);
+            foreach ($mountList as $mount)
             {
                 $mountServer = (new MountServer())->forceFill([
                     'mount_id' => $mount->id,
                     'server_id' => $server->id,
                 ]);
-
                 $mountServer->saveOrFail();
             }
         }

@@ -129,6 +129,7 @@ class Server extends Model
         'egg_id' => 'required|exists:eggs,id',
         'startup' => 'required|string',
         'skip_scripts' => 'sometimes|boolean',
+        'mount_all' => 'sometimes|boolean',
         'image' => 'required|string|max:191',
         'database_limit' => 'present|nullable|integer|min:0',
         'allocation_limit' => 'sometimes|nullable|integer|min:0',

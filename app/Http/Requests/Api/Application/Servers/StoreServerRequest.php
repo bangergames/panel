@@ -38,7 +38,7 @@ class StoreServerRequest extends ApplicationApiRequest
             'startup' => $rules['startup'],
             'environment' => 'present|array',
             'skip_scripts' => 'sometimes|boolean',
-            'mount_all' => 'sometimes|boolean',
+            'mount_all' => $rules['mount_all'],
             'oom_disabled' => 'sometimes|boolean',
 
             // Resource limitations

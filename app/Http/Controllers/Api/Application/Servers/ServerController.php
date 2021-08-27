@@ -3,6 +3,7 @@
 namespace Pterodactyl\Http\Controllers\Api\Application\Servers;
 
 use Illuminate\Http\Response;
+use Pterodactyl\Models\Mount;
 use Pterodactyl\Models\MountServer;
 use Pterodactyl\Models\Server;
 use Illuminate\Http\JsonResponse;
@@ -79,16 +80,15 @@ class ServerController extends ApplicationApiController
     public function store(StoreServerRequest $request): JsonResponse
     {
         $server = $this->creationService->handle($request->validated(), $request->getDeploymentObject());
-
-        if ($request->get('mount_all', false))
-        {
-            $mountList = MountRepository::getMountListForServer($server);
-            foreach ($mountList as $mount)
+        if ($request->get('mount_all', false)) {
+            $mounts = Mount::where('user_mountable', true)->get();
+            foreach ($mounts as $mount)
             {
                 $mountServer = (new MountServer())->forceFill([
                     'mount_id' => $mount->id,
                     'server_id' => $server->id,
                 ]);
+
                 $mountServer->saveOrFail();
             }
         }
